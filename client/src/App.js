@@ -31,7 +31,9 @@ class App extends Component{
   };
 
   brainCommunication(){
-    API.readBrains();
+    API.readBrains().then(res =>{
+      console.log(res.data);
+    });
   };
 
   render(){
@@ -45,7 +47,7 @@ class App extends Component{
       <div className="App">
         <header className="App-header">
           <p>
-            Employee Mind Reader
+            Cabalistic Necromancer
           </p>
         </header>
   

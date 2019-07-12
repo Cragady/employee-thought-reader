@@ -1,9 +1,6 @@
-const router = require('express').Router();
+const router = require('express').Router(),
+    brainRead = require('./brain-read');
 
-router.route("/brain-read")
-    .get((req, res) => {
-        res.json({"Test": "True"});
-        console.log("api hit");
-    });
+router.use('/brain-read', brainRead);
 
 module.exports = router;

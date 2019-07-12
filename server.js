@@ -1,20 +1,32 @@
 const express = require('express'),
     bodyParser = require('body-parser'),
     routes = require('./routes'),
-    app = express(),
+    exApp = express(),
+    app = require('http').Server(exApp),
+    // app = express(),
     path = require('path'),
+    io = require('socket.io')(app),
     PORT = process.env.PORT || 3001;
 
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
+exApp.use(bodyParser.urlencoded({ extended: true }));
+exApp.use(bodyParser.json());
 
 if(process.env.NODE_ENV === "production"){
     app.use(express.static('client/build'));
 };
 
-app.use(routes);
+exApp.use(routes);
 
-app.get("*", (req, res) =>{
+io.on('connection', (socket) =>{
+    console.log('--> Socket live');
+
+    socket.on('change color', (color) =>{
+        console.log('Color Changed to:', color);
+        io.sockets.emit('change color', color);
+    });
+});
+
+exApp.get("*", (req, res) =>{
     res.sendfile(path.join(__dirname, './client/build/index.html'));
 });
 

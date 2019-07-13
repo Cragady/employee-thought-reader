@@ -23,12 +23,18 @@ function reading(req, response){
                             ThoughtShow.imgUrl = portfolio.attr('src');
                             globalStop = false;
                             console.log('response')
-                            return response.json(ThoughtShow);
+                            return response.json(ThoughtShow).end();
                         };
                     });
                 });
             } catch (err){
-                console.log(err);
+                globalStop = false;
+                console.log(`
+------>>>                
+merry-go-round
+<<<------
+`);
+                return reading(req, response);
             };
         });
     } else {

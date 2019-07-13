@@ -3,7 +3,6 @@ const express = require('express'),
     routes = require('./routes'),
     exApp = express(),
     app = require('http').Server(exApp),
-    // app = express(),
     path = require('path'),
     io = require('socket.io')(app),
     PORT = process.env.PORT || 3001;
@@ -18,11 +17,11 @@ if(process.env.NODE_ENV === "production"){
 exApp.use(routes);
 
 io.on('connection', (socket) =>{
-    console.log('--> Socket live');
-
-    socket.on('change color', (color) =>{
-        console.log('Color Changed to:', color);
-        io.sockets.emit('change color', color);
+    socket.on('thought read', (tho) =>{
+        if(tho !== null && tho !== undefined){
+            console.log('Color Changed to:', tho);
+            io.sockets.emit('thought read', tho);
+        };
     });
 });
 

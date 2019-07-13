@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import API from './utils/API';
 import io from 'socket.io-client';
+import Thoughts from './Thoughts/Thoughts';
 import './App.css';
 
 class App extends Component{
@@ -8,41 +9,53 @@ class App extends Component{
     super(props);
     this.state = {
       endpoint: `${window.location.hostname}:${parseInt(window.location.port) + 1}`,
+      thought: undefined,
       color: 'white'
     }
   }
 
-  send(){
+  send = () =>{
     const socket = io(this.state.endpoint);
-    socket.emit('change color', this.state.color);
+    socket.emit('thought read', this.state.thought);
   };
 
-  setColor(color){
-    this.setState({color});
+  setThought = (brain) =>{
+    this.setState({thought: brain});
   };
 
   componentDidMount(){
     const socket = io(this.state.endpoint);
-    setInterval(this.send(), 5000);
-    socket.on('change color', (col) =>{
-      const AppSel = document.getElementsByClassName('App')[0];
-      AppSel.style.backgroundColor = col;
+    // setInterval(() =>{this.send()}, 1000); //this is in working condition
+    socket.on('thought read', (tho) =>{
+      if(tho !== undefined && tho !== null){
+        this.setThought(tho);
+      };
     });
   };
 
-  brainCommunication(){
+  brainCommunication = () =>{
     API.readBrains().then(res =>{
-      console.log(res.data);
-    });
+      this.setThought(res.data)
+    }).then(() =>{
+      this.send();
+    });;
   };
 
   render(){
     const socket = io(this.state.endpoint);
-    socket.on('change color', (col) =>{
-      const AppSel = document.getElementsByClassName('App')[0];
-      AppSel.style.backgroundColor = col;
+    let thoughtItems, thoughtPlacement;
+    if((this.state.thought !== undefined) && (this.state.thought !== null)){
+      thoughtItems = this.state.thought;
+      thoughtPlacement =  [<Thoughts key="key1" src={thoughtItems.imgUrl} alt={thoughtItems.name} />];
+    } else {
+      thoughtPlacement = null;
+    };
+    socket.on('thought read', (tho) =>{
+        if(tho){
+          thoughtItems = tho;
+          thoughtPlacement =  [<Thoughts key="key1" src={thoughtItems.imgUrl} alt={thoughtItems.name} />];
+        };
     });
-
     return (
       <div className="App">
         <header className="App-header">
@@ -60,6 +73,8 @@ class App extends Component{
 
         <button id="blue" onClick={() => this.setColor('blue')}>Blue</button>
         <button id="red" onClick={() => this.setColor('red')}>Red</button>
+
+        {thoughtPlacement}
       </div>
     );
   };

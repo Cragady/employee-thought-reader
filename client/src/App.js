@@ -41,21 +41,26 @@ class App extends Component{
     });;
   };
 
+  mindMapper = (tho) =>{
+    return [<Thoughts key="key1" src={tho.imgUrl} name={tho.name} currentThought={tho.currentThought} currentBeer={tho.currentBeer} daydream={tho.daydream} />];
+  }
+
   render(){
     const socket = io(this.state.endpoint);
     let thoughtItems, thoughtPlacement;
     if((this.state.thought !== undefined) && (this.state.thought !== null)){
       thoughtItems = this.state.thought;
-      thoughtPlacement =  [<Thoughts key="key1" src={thoughtItems.imgUrl} alt={thoughtItems.name} />];
+      thoughtPlacement =  this.mindMapper(thoughtItems);
     } else {
       thoughtPlacement = null;
     };
     socket.on('thought read', (tho) =>{
         if(tho){
           thoughtItems = tho;
-          thoughtPlacement =  [<Thoughts key="key1" src={thoughtItems.imgUrl} alt={thoughtItems.name} />];
+          thoughtPlacement =  this.mindMapper(thoughtItems);
         };
     });
+    console.log(this.state.thought);
     return (
       <div className="App">
         <header className="App-header">
@@ -67,14 +72,9 @@ class App extends Component{
         <button onClick={this.brainCommunication}>
           Read Brain
         </button>
-        <button onClick={() => this.send() }>Change Color</button>
-
-
-
-        <button id="blue" onClick={() => this.setColor('blue')}>Blue</button>
-        <button id="red" onClick={() => this.setColor('red')}>Red</button>
 
         {thoughtPlacement}
+        
       </div>
     );
   };

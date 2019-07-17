@@ -1,6 +1,7 @@
 const router = require('express').Router(),
     request = require('request'),
-    cheerio = require("cheerio"),
+    cheerio = require('cheerio'),
+    Bottleneck = require('bottleneck'),
     Thought = require('../../ThoughtTemp/ThoughtTemp');
 
 let globalStop = false;

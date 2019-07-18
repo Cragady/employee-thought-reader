@@ -10,17 +10,22 @@ class App extends Component{
     this.state = {
       endpoint: `${window.location.hostname}:${parseInt(window.location.port) + 1}`,
       thought: undefined,
-      color: 'white'
+      isCalled: false
     }
   }
 
   send = () =>{
     const socket = io(this.state.endpoint);
     socket.emit('thought read', this.state.thought);
+    socket.emit('api called', this.state.isCalled);
   };
 
   setThought = (brain) =>{
     this.setState({thought: brain});
+  };
+
+  setApi = (api) =>{
+    this.setState({isCalled: api});
   };
 
   componentDidMount(){
@@ -31,14 +36,40 @@ class App extends Component{
         this.setThought(tho);
       };
     });
+  
+    socket.on('api called', (api) =>{
+      if(api){
+        setTimeout(() =>{
+          this.setApi(false);
+        }, 2000);
+      };
+    });
   };
 
   brainCommunication = () =>{
     API.readBrains().then(res =>{
-      this.setThought(res.data)
+      if(res.data !== ""){
+        this.setThought(res.data)
+      } else {
+        console.log(typeof res.data);        
+      };
     }).then(() =>{
       this.send();
+    })
+    .catch(() =>{
+      console.log('Data is corrupted');
     });;
+  };
+
+  brainLimiter = async () =>{
+    if(!this.state.isCalled){
+      await this.setState({
+        isCalled: true
+      })
+      this.brainCommunication()
+    } else {
+      console.log('Too Many Requests');
+    };
   };
 
   mindMapper = (tho) =>{
@@ -48,19 +79,21 @@ class App extends Component{
   render(){
     const socket = io(this.state.endpoint);
     let thoughtItems, thoughtPlacement;
+
     if((this.state.thought !== undefined) && (this.state.thought !== null)){
       thoughtItems = this.state.thought;
       thoughtPlacement =  this.mindMapper(thoughtItems);
     } else {
       thoughtPlacement = null;
     };
+
     socket.on('thought read', (tho) =>{
         if(tho){
           thoughtItems = tho;
           thoughtPlacement =  this.mindMapper(thoughtItems);
         };
     });
-    console.log(this.state.thought);
+
     return (
       <div className="App">
         <header className="App-header">
@@ -69,7 +102,7 @@ class App extends Component{
           </p>
         </header>
   
-        <button onClick={this.brainCommunication}>
+        <button onClick={this.brainLimiter}>
           Read Brain
         </button>
 

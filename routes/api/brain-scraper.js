@@ -13,17 +13,15 @@ function brainScraper(req, response){
     console.log("HIT");
 
     const ping = () =>{
-        request('https://pdqweb.azurewebsites.net/api/brain')
+        return request('https://pdqweb.azurewebsites.net/api/brain')
             .then(res =>{
-                console.log('readerrrrrrr')
-                console.log(res);
                 const ThoughtPass = JSON.parse(res);
                 const ThoughtShow = new Thought(ThoughtPass);
                 scraped(ThoughtShow);
             })
             .catch(err =>{
-                console.log(err.StatusCodeError, 
-`
+                console.log( 
+`   Response Error!
     ------>>>                
     merry-go-round
     <<<------
@@ -35,7 +33,7 @@ function brainScraper(req, response){
     
     const scraped = (thoughtShow) =>{
         thoughtShow.name = "Kristen";
-        request(options)
+        return request(options)
             .then($ =>{
                 let thoughtArr = [];
                 $(".c.figures").children().each(function(i, element){
@@ -45,11 +43,11 @@ function brainScraper(req, response){
                     if(portfolio.attr('alt') === thoughtShow.name){
                         thoughtPusher.imgUrl = portfolio.attr('src');
                         thoughtArr.push(thoughtPusher);
-                        console.log(portfolio.attr('src'));
                     } else if (i === $(".c.figures").children().length - 1){
                         thoughtArr.push(thoughtShow);
                     };
                 });
+                console.log('response');
                 response.json(multipleName(thoughtArr)).end();
             })
             .catch(err => {
@@ -59,7 +57,6 @@ function brainScraper(req, response){
 
     const multipleName = (arr) =>{
         const randI = Math.floor(Math.random() * arr.length);
-        console.log(arr);
         if(arr.length > 1){
             console.log(`Multiple people named ${arr[0].name}, guessing what ${arr[0].name} looks like!`);
             return arr[randI];
@@ -68,7 +65,7 @@ function brainScraper(req, response){
         };
     };
     
-    ping();
+    return ping();
 };
 
 module.exports = brainScraper;

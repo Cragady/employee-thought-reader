@@ -19,8 +19,14 @@ exApp.use(routes);
 io.on('connection', (socket) =>{
     socket.on('thought read', (tho) =>{
         if(tho !== null && tho !== undefined){
-            console.log('Color Changed to:', tho);
+            // console.log('Color Changed to:', tho);
             io.sockets.emit('thought read', tho);
+        };
+    });
+    
+    socket.on('api called', (api) =>{
+        if(api){
+            io.sockets.emit('api called', api);
         };
     });
 });

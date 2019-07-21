@@ -4,11 +4,11 @@ import './Thoughts.css';
 export const Thoughts = props => {
     return(
         <section>
-            <img src={props.src} alt={props.name} />
-            <p>{props.name}</p>
-            <p>Current Beer: {props.currentBeer}</p>
-            <p>Current Thought: {props.currentThought}</p>
-            <img src={props.daydream} alt={props.name + " daydrem"} />
+            {props.src && <img src={props.src} alt={props.name} />}
+            {props.name && <p>{props.name}</p>}
+            {props.currentBeer && <p>Current Beer: {props.currentBeer}</p>}
+            {props.currentThought && <p>Current Thought: {props.currentThought}</p>}
+            {props.daydream && <img src={props.daydream} alt={props.name + " daydrem"} />}
         </section>
     )
 };

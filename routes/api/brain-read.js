@@ -12,10 +12,10 @@ const limiter = new Bottleneck({
 function readLimit(req, res){
     limiter.schedule(() =>{brainScraper(req, res)})
     .then(() =>{
-        limiter.on('dropped', (req, res) =>{
-            console.log('Too many api calls');
-            res.end();
-        });
+        // limiter.on('dropped', (req, res) =>{
+        //     console.log('Too many api calls');
+        //     res.end();
+        // });
     })
     .catch(() =>{
         console.log('api call failed');

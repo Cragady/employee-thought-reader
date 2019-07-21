@@ -32,7 +32,6 @@ function brainScraper(req, response){
     };
     
     const scraped = (thoughtShow) =>{
-        thoughtShow.name = "Kristen";
         return request(options)
             .then($ =>{
                 let thoughtArr = [];
@@ -43,7 +42,7 @@ function brainScraper(req, response){
                     if(portfolio.attr('alt') === thoughtShow.name){
                         thoughtPusher.imgUrl = portfolio.attr('src');
                         thoughtArr.push(thoughtPusher);
-                    } else if (i === $(".c.figures").children().length - 1){
+                    } else if (i === $(".c.figures").children().length - 1 && thoughtArr.length === 0){
                         thoughtArr.push(thoughtShow);
                     };
                 });

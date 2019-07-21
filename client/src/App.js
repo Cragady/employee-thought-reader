@@ -9,7 +9,9 @@ class App extends Component{
     super(props);
     this.state = {
       endpoint: `${window.location.hostname}:${parseInt(window.location.port) + 1}`,
-      thought: undefined,
+      thought: {
+        imgUrl: './images/unknown.png'
+      },
       isCalled: false
     }
   }
@@ -49,6 +51,9 @@ class App extends Component{
   brainCommunication = () =>{
     API.readBrains().then(res =>{
       if(res.data !== ""){
+        if(res.data.imgUrl === ""){
+          res.data.imgUrl = './images/cant-find.png';
+        };
         this.setThought(res.data)
       } else {
         console.log(typeof res.data);        

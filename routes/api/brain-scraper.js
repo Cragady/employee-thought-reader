@@ -36,11 +36,12 @@ function brainScraper(req, response){
             .then($ =>{
                 let thoughtArr = [];
                 $(".c.figures").children().each(function(i, element){
-                    const portfolio = $(element).find('img');
+                    const portCatch = $(element).find('div');
+                    const portThrow = portCatch.parent().find('img');
                     const thoughtPusher = new Thought(thoughtShow);
                     
-                    if(portfolio.attr('alt') === thoughtShow.name){
-                        thoughtPusher.imgUrl = portfolio.attr('src');
+                    if(portCatch.text() === thoughtShow.name){
+                        thoughtPusher.imgUrl = portThrow.attr('src');
                         thoughtArr.push(thoughtPusher);
                     } else if (i === $(".c.figures").children().length - 1 && thoughtArr.length === 0){
                         thoughtArr.push(thoughtShow);

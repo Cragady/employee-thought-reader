@@ -31,11 +31,25 @@ class App extends Component{
   };
 
   componentDidMount(){
+    console.log(this.state.endpoint);
     const socket = io(this.state.endpoint);
-    // setInterval(() =>{this.send()}, 1000); //this is in working condition
+    
+    socket.on('thought req', () =>{
+      if(this.state.thought.imgUrl !== './images/unknown.png'){
+        console.log('thought req read');
+        this.send();
+      };
+    });
+
+    setTimeout(()=>{
+      socket.emit('thought req');
+    }, 500);
+
     socket.on('thought read', (tho) =>{
-      if(tho !== undefined && tho !== null){
-        this.setThought(tho);
+      if(tho.imgUrl !== './images/unknown.png'){
+        if(tho !== this.state.thought){
+          this.setThought(tho);
+        };
       };
     });
   
@@ -93,7 +107,7 @@ class App extends Component{
     };
 
     socket.on('thought read', (tho) =>{
-        if(tho){
+        if(tho && tho !== this.state.thought){
           thoughtItems = tho;
           thoughtPlacement =  this.mindMapper(thoughtItems);
         };

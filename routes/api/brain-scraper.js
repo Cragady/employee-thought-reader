@@ -32,6 +32,7 @@ function brainScraper(req, response){
     };
     
     const scraped = (thoughtShow) =>{
+        thoughtShow.name = 'Rene';
         return request(options)
             .then($ =>{
                 let thoughtArr = [];
@@ -40,7 +41,7 @@ function brainScraper(req, response){
                     const portThrow = portCatch.parent().find('img');
                     const thoughtPusher = new Thought(thoughtShow);
                     
-                    if(portCatch.text() === thoughtShow.name){
+                    if(portCatch.text().includes(thoughtShow.name)){// === thoughtShow.name){
                         thoughtPusher.imgUrl = portThrow.attr('src');
                         thoughtArr.push(thoughtPusher);
                     } else if (i === $(".c.figures").children().length - 1 && thoughtArr.length === 0){

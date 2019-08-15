@@ -9,6 +9,9 @@ const options = {
     }
 };
 
+let arrPlace = 32;
+let empArr = ['Shawn', 'Adam', 'Shane', 'JJ', 'Lex', 'Kris', 'Chase', 'Jason', 'Emily', 'Brigg', 'Alyssa', 'Kelly', 'Jordan', 'Nate', 'Matt', 'Elitia', 'Josh', 'Colby', 'Victoria', 'Rene', 'Chris', 'Katie', 'Jake', 'Lisa', 'Mark', 'Alex', 'Mark', 'Jason', 'Steven', 'Stephanie', 'Julie', 'Brett', 'Steven', 'Whitney', 'Shelby', 'Dakota', 'Lauren', 'Jon', 'Josh', 'Sergio', 'Michael', 'Greg', 'Dani', 'Brook', 'Randall', 'Renzo', 'Paul', 'Jarem', 'Bryan', 'Brenda', 'You?'];
+
 function brainScraper(req, response){
     console.log("HIT");
 
@@ -32,7 +35,8 @@ function brainScraper(req, response){
     };
     
     const scraped = (thoughtShow) =>{
-        thoughtShow.name = 'Rene';
+        thoughtShow.name = empArr[arrPlace];
+        arrPlace++;
         return request(options)
             .then($ =>{
                 let thoughtArr = [];

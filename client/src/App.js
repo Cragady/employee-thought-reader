@@ -10,7 +10,8 @@ class App extends Component{
     this.state = {
       endpoint: io(`${window.location.hostname}:${parseInt(window.location.port) + 1}`),
       thought: {
-        imgUrl: './images/unknown.png'
+        imgUrl: './images/unknown.png',
+        tStamp: 0
       },
       isCalled: false
     }
@@ -47,7 +48,7 @@ class App extends Component{
 
     socket.on('thought read', (tho) =>{
       if(tho.imgUrl !== './images/unknown.png'){
-        if(tho !== this.state.thought){
+        if(tho !== this.state.thought && tho.tStamp > this.state.thought.tStamp){
           this.setThought(tho);
         };
       };
@@ -107,11 +108,13 @@ class App extends Component{
     };
 
     socket.on('thought read', (tho) =>{
-        if(tho && tho !== this.state.thought){
+        if(tho && tho !== this.state.thought && tho.tStamp > this.state.thought.tStamp){
           thoughtItems = tho;
           thoughtPlacement =  this.mindMapper(thoughtItems);
         };
     });
+
+    console.log(this.state.thought);
 
     return (
       <div className="App">

@@ -8,7 +8,7 @@ class App extends Component{
   constructor(props){
     super(props);
     this.state = {
-      endpoint: `${window.location.hostname}:${parseInt(window.location.port) + 1}`,
+      endpoint: io(`${window.location.hostname}:${parseInt(window.location.port) + 1}`),
       thought: {
         imgUrl: './images/unknown.png'
       },
@@ -17,7 +17,7 @@ class App extends Component{
   }
 
   send = () =>{
-    const socket = io(this.state.endpoint);
+    const socket = this.state.endpoint;
     socket.emit('thought read', this.state.thought);
     socket.emit('api called', this.state.isCalled);
   };
@@ -32,7 +32,7 @@ class App extends Component{
 
   componentDidMount(){
     console.log(this.state.endpoint);
-    const socket = io(this.state.endpoint);
+    const socket = this.state.endpoint;
     
     socket.on('thought req', () =>{
       if(this.state.thought.imgUrl !== './images/unknown.png'){
@@ -96,7 +96,7 @@ class App extends Component{
   }
 
   render(){
-    const socket = io(this.state.endpoint);
+    const socket = this.state.endpoint;
     let thoughtItems, thoughtPlacement;
 
     if((this.state.thought !== undefined) && (this.state.thought !== null)){

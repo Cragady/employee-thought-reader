@@ -13,26 +13,26 @@ class App extends Component{
         imgUrl: './images/unknown.png',
         tStamp: 0
       },
-      isCalled: false
+      isDisabled: false,
+      innerDis: 'Read Brain',
+      lagger: null
     }
   }
 
   send = () =>{
     const socket = this.state.endpoint;
     socket.emit('thought read', this.state.thought);
-    socket.emit('api called', this.state.isCalled);
   };
 
   setThought = (brain) =>{
     this.setState({thought: brain});
   };
 
-  setApi = (api) =>{
-    this.setState({isCalled: api});
-  };
+  // setApi = (api) =>{
+  //   this.setState({isCalled: api});
+  // };
 
   componentDidMount(){
-    console.log(this.state.endpoint);
     const socket = this.state.endpoint;
     
     socket.on('thought req', () =>{
@@ -49,17 +49,14 @@ class App extends Component{
     socket.on('thought read', (tho) =>{
       if(tho.imgUrl !== './images/unknown.png'){
         if(tho !== this.state.thought && tho.tStamp > this.state.thought.tStamp){
+          this.brainSwitch(false, 'Read Brain');
           this.setThought(tho);
         };
       };
     });
   
-    socket.on('api called', (api) =>{
-      if(api){
-        setTimeout(() =>{
-          this.setApi(false);
-        }, 2000);
-      };
+    socket.on('api called', () =>{
+      this.brainSwitch(true, <marquee>Thinking. . . </marquee>);
     });
   };
 
@@ -74,6 +71,7 @@ class App extends Component{
         console.log(typeof res.data);        
       };
     }).then(() =>{
+      this.brainSwitch(false, 'Read Brain');
       this.send();
     })
     .catch(() =>{
@@ -82,23 +80,39 @@ class App extends Component{
   };
 
   brainLimiter = async () =>{
-    if(!this.state.isCalled){
-      await this.setState({
-        isCalled: true
-      })
-      this.brainCommunication()
-    } else {
-      console.log('Too Many Requests');
-    };
+    const socket = this.state.endpoint;
+    await this.brainSwitch(true, <marquee>Thinking. . .</marquee>);
+    socket.emit('api called');
+    this.brainLag();
+    this.brainCommunication();
+  };
+
+  brainLag = () =>{
+    setTimeout(() =>{
+      // if(this.state.isDisabled){
+        this.setState({
+          lagger: <button>Click me if too long</button>
+        });
+      // };
+    }, 10000);
   };
 
   mindMapper = (tho) =>{
     return [<Thoughts key="key1" src={tho.imgUrl} name={tho.name} currentThought={tho.currentThought} currentBeer={tho.currentBeer} daydream={tho.daydream} />];
-  }
+  };
+
+  brainSwitch(bool, htmlPass){
+    this.setState({
+      isDisabled: bool,
+      innerDis: htmlPass
+    });
+  };
 
   render(){
     const socket = this.state.endpoint;
-    let thoughtItems, thoughtPlacement;
+    let thoughtItems, thoughtPlacement,
+    nonClickable = this.state.isDisabled,
+    butText = this.state.innerDis;
 
     if((this.state.thought !== undefined) && (this.state.thought !== null)){
       thoughtItems = this.state.thought;
@@ -107,14 +121,15 @@ class App extends Component{
       thoughtPlacement = null;
     };
 
+
     socket.on('thought read', (tho) =>{
         if(tho && tho !== this.state.thought && tho.tStamp > this.state.thought.tStamp){
+          nonClickable = false;
+          butText = 'Read Brain';
           thoughtItems = tho;
           thoughtPlacement =  this.mindMapper(thoughtItems);
         };
     });
-
-    console.log(this.state.thought);
 
     return (
       <div className="App">
@@ -123,11 +138,18 @@ class App extends Component{
             Cabalistic Necromancer
           </p>
         </header>
-  
-        <button onClick={this.brainLimiter}>
-          Read Brain
-        </button>
+        
+        {this.state.lagger}
 
+        {nonClickable === true ? 
+          <button disabled>
+            {butText}
+          </button>
+        : 
+          <button onClick={this.brainLimiter}>
+            {butText}
+          </button>
+        }
         {thoughtPlacement}
         
       </div>

@@ -27,10 +27,8 @@ io.on('connection', (socket) =>{
         io.sockets.emit('thought req');
     })
     
-    socket.on('api called', (api) =>{
-        if(api){
-            io.sockets.emit('api called', api);
-        };
+    socket.on('api called', () =>{
+        io.sockets.emit('api called');
     });
 });
 

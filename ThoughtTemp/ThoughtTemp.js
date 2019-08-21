@@ -6,6 +6,7 @@ function Thought(thought){
     this.daydream = daydream;
     this.imgUrl = "";
     this.tStamp = getUtc();
+    this.isDisabled = false;
 };
 
 function getUtc(){

@@ -13,7 +13,7 @@ class App extends Component{
         imgUrl: './images/unknown.png',
         tStamp: 0
       },
-      isDisabled: false,
+      // isDisabled: false,
       innerDis: 'Read Brain',
       lagger: null
     }
@@ -66,15 +66,17 @@ class App extends Component{
         if(res.data.imgUrl === ""){
           res.data.imgUrl = './images/cant-find.png';
         };
-        this.setThought(res.data)
+        console.log(res);
+        this.setThought(res.data);
       } else {
-        console.log(typeof res.data);        
+        console.log(res);        
       };
     }).then(() =>{
       this.brainSwitch(false, 'Read Brain');
       this.send();
     })
-    .catch(() =>{
+    .catch((err) =>{
+      console.log(err)
       console.log('Data is corrupted');
     });;
   };
@@ -102,17 +104,21 @@ class App extends Component{
   };
 
   brainSwitch(bool, htmlPass){
-    this.setState({
-      isDisabled: bool,
+    this.setState(preState =>({
+      thought:{
+        ...preState.thought,
+        isDisabled: bool
+      },
       innerDis: htmlPass
-    });
+    }));
   };
 
   render(){
     const socket = this.state.endpoint;
     let thoughtItems, thoughtPlacement,
-    nonClickable = this.state.isDisabled,
-    butText = this.state.innerDis;
+      nonClickable = this.state.thought.isDisabled,
+      butText = this.state.innerDis,
+      lagPlacer;
 
     if((this.state.thought !== undefined) && (this.state.thought !== null)){
       thoughtItems = this.state.thought;
@@ -121,11 +127,17 @@ class App extends Component{
       thoughtPlacement = null;
     };
 
+    if(this.state.thought.isDisabled){
+      lagPlacer = this.state.lagger;
+    } else {
+      lagPlacer = null;
+    };
 
     socket.on('thought read', (tho) =>{
         if(tho && tho !== this.state.thought && tho.tStamp > this.state.thought.tStamp){
           nonClickable = false;
           butText = 'Read Brain';
+          lagPlacer = null;
           thoughtItems = tho;
           thoughtPlacement =  this.mindMapper(thoughtItems);
         };
@@ -138,8 +150,8 @@ class App extends Component{
             Cabalistic Necromancer
           </p>
         </header>
-        
-        {this.state.lagger}
+
+        {lagPlacer}
 
         {nonClickable === true ? 
           <button disabled>

@@ -13,22 +13,33 @@ function brainScraper(req, response){
     console.log("HIT");
 
     const ping = () =>{
-        return request('https://pdqweb.azurewebsites.net/api/brain')
-            .then(res =>{
-                const ThoughtPass = JSON.parse(res);
-                const ThoughtShow = new Thought(ThoughtPass);
-                scraped(ThoughtShow);
-            })
-            .catch(err =>{
-                console.log( 
+        const r = request('https://pdqweb.azurewebsites.net/api/brain');
+        r.then(res =>{
+            const ThoughtPass = JSON.parse(res);
+            const ThoughtShow = new Thought(ThoughtPass);
+            scraped(ThoughtShow);
+        })
+        .catch(err =>{
+            console.log( 
 `   Response Error!
-    ------>>>                
-    merry-go-round
-    <<<------
+------>>>                
+merry-go-round
+<<<------
 `
-                );
-                ping(); 
-            });
+            );
+            ping(); 
+        });
+
+        setTimeout(() => {
+            console.log('You\'re too slow! :D');
+            response.status(408).end();
+            r.abort();
+            // return JSON.parse('{"status": "de;nied"}');
+            // r.abort(response =>{
+            //     response.status(408).end();                
+            // });
+        }, 3000);
+        return r;
     };
     
     const scraped = (thoughtShow) =>{

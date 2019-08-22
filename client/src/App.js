@@ -78,8 +78,13 @@ class App extends Component{
       this.send();
     })
     .catch((err) =>{
-      console.log(err)
-      console.log('Data is corrupted');
+      if(err.response.status === 508){
+        console.log('Infinite recursion detected, please try again');
+        this.brainSwitch(false, 'Read Brain');
+      } else {
+        console.log('Data is corrupted, please try again');
+        this.brainSwitch(false, 'Read Brain');
+      };
     });;
   };
 

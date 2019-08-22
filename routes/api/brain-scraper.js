@@ -11,20 +11,25 @@ const options = {
 
 function brainScraper(req, response){
     console.log("HIT");
+    // let recallLimiter = 0;
+    let recallLimiter = 3;
 
     const brainRacer = function(ms, promise){
 
         let timeout = new Promise((resolve, reject) =>{
             let id = setTimeout(() =>{
                 clearTimeout(id);
-                reject('oops');
+                const err = new Error(['Request Timed Out', 'brain-scraper.js', 22])
+                err.statusCode = 408;
+                err.cusMessage = err.message;
+                reject(err);
             }, ms);
         });
 
         let nestPromise = new Promise((resolve, reject) =>{
             resolve(promise)
                 .catch(err =>{
-                    reject(err);
+                    throw err;
                 });
         });
 
@@ -42,7 +47,8 @@ function brainScraper(req, response){
             return scraped(ThoughtShow);
         })
         .catch(err =>{
-            if(err.statusCode === 500){
+            if(recallLimiter < 3){
+                recallLimiter++;
                 console.log( 
 `   Response Error!
 ------>>>                
@@ -52,8 +58,10 @@ merry-go-round
                 );
                 return ping(); 
             } else {
-                console.log('err on ping');
-                throw err;
+            err.cusMessage = 'Infinite recursion potential identified, exiting loop.';
+            err.statusCode = 508;
+            console.log(err.cusMessage);
+            throw err;
             };
         });
     };
@@ -61,7 +69,6 @@ merry-go-round
     const scraped = (thoughtShow) =>{
         return request(options)
         .then($ =>{
-                hi;
                 let thoughtArr = [];
                 $(".c.figures").children().each(function(i, element){
                     const portCatch = $(element).find('div');
@@ -78,7 +85,6 @@ merry-go-round
                 return multipleName(thoughtArr);
             })
             .catch(err => {
-                console.log('err on scraped');
                 throw err;
             }); 
     };
@@ -93,16 +99,19 @@ merry-go-round
         };
     };
 
-    return brainRacer(1000000, ping())
+    return brainRacer(100000000, ping())
         .then(res =>{
             console.log('response');
-            console.log(res);
             return response.json(res).end();
         })
         .catch(err =>{
-            console.log('Request Timed Out');
-            response.status(408).end();
-            return;
+            console.log(err.cusMessage);
+            console.log(err.statusCode);
+            if(err.statusCode === 408){
+                return response.status(408).end();
+            } else {
+                return response.status(508).end();
+            };
         });
 };
 

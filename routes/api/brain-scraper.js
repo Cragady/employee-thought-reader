@@ -12,39 +12,56 @@ const options = {
 function brainScraper(req, response){
     console.log("HIT");
 
+    const brainRacer = function(ms, promise){
+
+        let timeout = new Promise((resolve, reject) =>{
+            let id = setTimeout(() =>{
+                clearTimeout(id);
+                reject('oops');
+            }, ms);
+        });
+
+        let nestPromise = new Promise((resolve, reject) =>{
+            resolve(promise)
+                .catch(err =>{
+                    reject(err);
+                });
+        });
+
+        return Promise.race([
+            nestPromise,
+            timeout
+        ]);
+    };  
+
     const ping = () =>{
         const r = request('https://pdqweb.azurewebsites.net/api/brain');
-        r.then(res =>{
+        return r.then(res =>{
             const ThoughtPass = JSON.parse(res);
             const ThoughtShow = new Thought(ThoughtPass);
-            scraped(ThoughtShow);
+            return scraped(ThoughtShow);
         })
         .catch(err =>{
-            console.log( 
+            if(err.statusCode === 500){
+                console.log( 
 `   Response Error!
 ------>>>                
 merry-go-round
 <<<------
 `
-            );
-            ping(); 
+                );
+                return ping(); 
+            } else {
+                console.log('err on ping');
+                throw err;
+            };
         });
-
-        setTimeout(() => {
-            console.log('You\'re too slow! :D');
-            response.status(408).end();
-            r.abort();
-            // return JSON.parse('{"status": "de;nied"}');
-            // r.abort(response =>{
-            //     response.status(408).end();                
-            // });
-        }, 3000);
-        return r;
     };
     
     const scraped = (thoughtShow) =>{
         return request(options)
-            .then($ =>{
+        .then($ =>{
+                hi;
                 let thoughtArr = [];
                 $(".c.figures").children().each(function(i, element){
                     const portCatch = $(element).find('div');
@@ -58,11 +75,11 @@ merry-go-round
                         thoughtArr.push(thoughtShow);
                     };
                 });
-                console.log('response');
-                response.json(multipleName(thoughtArr)).end();
+                return multipleName(thoughtArr);
             })
             .catch(err => {
-                console.log(err);
+                console.log('err on scraped');
+                throw err;
             }); 
     };
 
@@ -75,8 +92,18 @@ merry-go-round
             return arr[0];
         };
     };
-    
-    return ping();
+
+    return brainRacer(1000000, ping())
+        .then(res =>{
+            console.log('response');
+            console.log(res);
+            return response.json(res).end();
+        })
+        .catch(err =>{
+            console.log('Request Timed Out');
+            response.status(408).end();
+            return;
+        });
 };
 
 module.exports = brainScraper;

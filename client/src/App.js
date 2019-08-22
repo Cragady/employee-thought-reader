@@ -62,13 +62,15 @@ class App extends Component{
 
   brainCommunication = () =>{
     API.readBrains().then(res =>{
-      if(res.data !== ""){
+      if(res.data !== "" && res.data !== {}){
         if(res.data.imgUrl === ""){
           res.data.imgUrl = './images/cant-find.png';
         };
+        console.log('hit success');
         console.log(res);
         this.setThought(res.data);
       } else {
+        console.log('err status');
         console.log(res);        
       };
     }).then(() =>{

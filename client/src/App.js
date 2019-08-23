@@ -68,14 +68,11 @@ class App extends Component{
   };
 
   brainCommunication = () =>{
-    console.log(this.state.thought);
     API.readBrains().then(res =>{
       if(res.data !== "" && res.data !== {} && this.state.thought.isDisabled){
         if(res.data.imgUrl === ""){
           res.data.imgUrl = './images/cant-find.png';
         };
-        console.log('hit success');
-        console.log(res);
         this.setThought(res.data);
       };
     }).then(() =>{

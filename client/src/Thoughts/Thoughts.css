@@ -1,3 +1,16 @@
 img{
+    min-width: 30vw;
     max-width: 60vw;
+}
+
+.img-container{
+    z-index: -1;
+    background: radial-gradient(white, transparent);
+    display: inline-block;
+}
+
+.img-name-container{
+    z-index: -2;
+    display: inline-block;
+    background: radial-gradient(transparent, rgba(255, 255, 255, 0.075), transparent);
 }

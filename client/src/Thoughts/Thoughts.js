@@ -4,8 +4,14 @@ import './Thoughts.css';
 export const Thoughts = props => {
     return(
         <section>
-            {props.src && <img src={props.src} alt={props.name} />}
-            {props.name && <p>{props.name}</p>}
+            <div className="img-name-container">
+                <div className="img-container m-3 rounded">
+                    {props.src && <img src={props.src} alt={props.name} />}
+                </div>
+
+                {props.name && <p>{props.name}</p>}
+            </div>
+
             {props.currentBeer && <p>Current Beer: {props.currentBeer}</p>}
             {props.currentThought && <p>Current Thought: {props.currentThought}</p>}
             {props.daydream && <img src={props.daydream} alt={props.name + " daydrem"} />}

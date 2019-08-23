@@ -21,3 +21,11 @@ img{
     display: inline-block;
     background: radial-gradient(transparent, rgba(255, 255, 255, 0.075), transparent);
 } */
+
+.text-containers{
+    background: white;
+    /* display: flex;
+    flex-direction: end;
+    padding: auto;
+    margin: auto; */
+}

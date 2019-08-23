@@ -1,11 +1,13 @@
 .App {
   text-align: center;
   min-height: 100vh;
-  background-color: #454c5a;
+  /* background-color: #454c5a; */ /*This was the original*/
+  background: radial-gradient(#454c5ae5, #383e49, #454c5ae5, #383e49);
 }
 
 .App-header {
-  background-color: #28303f;
+  background-color: #13161b71;
+  /* background-color: #28303fc2; */
   display: flex;
   flex-direction: column;
   align-items: center;

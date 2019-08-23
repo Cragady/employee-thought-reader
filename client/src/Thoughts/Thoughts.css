@@ -3,14 +3,21 @@ img{
     max-width: 60vw;
 }
 
+.thought-card{
+    display: inline-block;
+    background: rgba(0, 0, 0, 0.288);
+}
+
 .img-container{
-    z-index: -1;
     background: radial-gradient(white, transparent);
     display: inline-block;
 }
 
 .img-name-container{
-    z-index: -2;
+    display: inline-block;
+    background: radial-gradient(transparent, rgba(0, 0, 0, 0.062));
+}
+/* .img-name-container{
     display: inline-block;
     background: radial-gradient(transparent, rgba(255, 255, 255, 0.075), transparent);
-}
+} */

@@ -15,7 +15,6 @@ class App extends Component{
       },
       innerDis: 'Read Brain',
       lagger: null
-      // changeInThought: true
     }
   }
 
@@ -78,14 +77,7 @@ class App extends Component{
         console.log('hit success');
         console.log(res);
         this.setThought(res.data);
-      }; //else {
-      //   console.log(this.state);
-      //   this.setState(preState =>({
-      //     ...preState,
-      //     changeInThought: true
-      //   }));
-      //   console.log(res);        
-      // };
+      };
     }).then(() =>{
       this.brainSwitch(false, 'Read Brain');
     })
@@ -140,16 +132,9 @@ class App extends Component{
         isDisabled: false
       },
       innerDis: 'Read Brain'
-      // changeInThought: false
     }));
     const socket = this.state.endpoint;
     socket.emit('override thought');
-    // setTimeout(() => {
-    //   this.setState(preState =>({
-    //     ...preState,
-    //     changeInThought: true
-    //   }));
-    // }, 24000);
   };
 
   render(){

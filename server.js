@@ -23,6 +23,10 @@ io.on('connection', (socket) =>{
         };
     });
 
+    socket.on('override thought', () =>{
+        io.sockets.emit('override thought');
+    });
+
     socket.on('thought req', () =>{
         io.sockets.emit('thought req');
     })

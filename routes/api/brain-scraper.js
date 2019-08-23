@@ -11,8 +11,7 @@ const options = {
 
 function brainScraper(req, response){
     console.log("HIT");
-    // let recallLimiter = 0;
-    let recallLimiter = 3;
+    let recallLimiter = 0;
 
     const brainRacer = function(ms, promise){
 
@@ -99,7 +98,7 @@ merry-go-round
         };
     };
 
-    return brainRacer(100000000, ping())
+    return brainRacer(20000, ping())
         .then(res =>{
             console.log('response');
             return response.json(res).end();

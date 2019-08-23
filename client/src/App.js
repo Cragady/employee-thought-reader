@@ -13,9 +13,9 @@ class App extends Component{
         imgUrl: './images/unknown.png',
         tStamp: 0
       },
-      // isDisabled: false,
       innerDis: 'Read Brain',
       lagger: null
+      // changeInThought: true
     }
   }
 
@@ -27,10 +27,6 @@ class App extends Component{
   setThought = (brain) =>{
     this.setState({thought: brain});
   };
-
-  // setApi = (api) =>{
-  //   this.setState({isCalled: api});
-  // };
 
   componentDidMount(){
     const socket = this.state.endpoint;
@@ -54,28 +50,44 @@ class App extends Component{
         };
       };
     });
+
+    socket.on('override thought', () =>{
+      this.brainSwitch(false, 'Read Brain');
+    });
   
     socket.on('api called', () =>{
+      this.brainLag();
+      // eslint-disable-next-line
       this.brainSwitch(true, <marquee>Thinking. . . </marquee>);
     });
   };
 
+  componentDidUpdate(preProps, preState){
+    if(this.state.thought !== preState.thought){
+      this.send();
+    };
+  };
+
   brainCommunication = () =>{
+    console.log(this.state.thought);
     API.readBrains().then(res =>{
-      if(res.data !== "" && res.data !== {}){
+      if(res.data !== "" && res.data !== {} && this.state.thought.isDisabled){
         if(res.data.imgUrl === ""){
           res.data.imgUrl = './images/cant-find.png';
         };
         console.log('hit success');
         console.log(res);
         this.setThought(res.data);
-      } else {
-        console.log('err status');
-        console.log(res);        
-      };
+      }; //else {
+      //   console.log(this.state);
+      //   this.setState(preState =>({
+      //     ...preState,
+      //     changeInThought: true
+      //   }));
+      //   console.log(res);        
+      // };
     }).then(() =>{
       this.brainSwitch(false, 'Read Brain');
-      this.send();
     })
     .catch((err) =>{
       if(err.response.status === 508){
@@ -90,6 +102,7 @@ class App extends Component{
 
   brainLimiter = async () =>{
     const socket = this.state.endpoint;
+    // eslint-disable-next-line
     await this.brainSwitch(true, <marquee>Thinking. . .</marquee>);
     socket.emit('api called');
     this.brainLag();
@@ -98,19 +111,19 @@ class App extends Component{
 
   brainLag = () =>{
     setTimeout(() =>{
-      // if(this.state.isDisabled){
+      if(this.state.thought.isDisabled){
         this.setState({
-          lagger: <button>Click me if too long</button>
+          lagger: <button onClick={this.brainRefresh} >Click me if too long</button>
         });
-      // };
-    }, 10000);
+      } else return;
+    }, 220);
   };
 
   mindMapper = (tho) =>{
     return [<Thoughts key="key1" src={tho.imgUrl} name={tho.name} currentThought={tho.currentThought} currentBeer={tho.currentBeer} daydream={tho.daydream} />];
   };
 
-  brainSwitch(bool, htmlPass){
+  brainSwitch = (bool, htmlPass) =>{
     this.setState(preState =>({
       thought:{
         ...preState.thought,
@@ -118,6 +131,25 @@ class App extends Component{
       },
       innerDis: htmlPass
     }));
+  };
+
+  brainRefresh = () =>{
+    this.setState(preState =>({
+      thought:{
+        ...preState.thought,
+        isDisabled: false
+      },
+      innerDis: 'Read Brain'
+      // changeInThought: false
+    }));
+    const socket = this.state.endpoint;
+    socket.emit('override thought');
+    // setTimeout(() => {
+    //   this.setState(preState =>({
+    //     ...preState,
+    //     changeInThought: true
+    //   }));
+    // }, 24000);
   };
 
   render(){
@@ -136,8 +168,11 @@ class App extends Component{
 
     if(this.state.thought.isDisabled){
       lagPlacer = this.state.lagger;
+      // eslint-disable-next-line
+      butText = <marquee>Thinking. . .</marquee>;
     } else {
       lagPlacer = null;
+      butText = 'Read Brain';
     };
 
     socket.on('thought read', (tho) =>{

@@ -3,9 +3,16 @@ img{
     max-width: 60vw;
 }
 
+.Thoughts{
+    max-width: 80vw;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 .thought-card{
     display: inline-block;
     background: rgba(0, 0, 0, 0.288);
+    padding: 1em;
 }
 
 .img-container{
@@ -16,16 +23,27 @@ img{
 .img-name-container{
     display: inline-block;
     background: radial-gradient(transparent, rgba(0, 0, 0, 0.062));
+    margin-top: 0.8em;
 }
-/* .img-name-container{
-    display: inline-block;
-    background: radial-gradient(transparent, rgba(255, 255, 255, 0.075), transparent);
-} */
 
 .text-containers{
-    background: white;
-    /* display: flex;
-    flex-direction: end;
-    padding: auto;
-    margin: auto; */
+    background: rgba(255, 255, 255, 0.185);
+    color: rgba(255, 255, 255, 0.74);
+    display: inline-block;
+    margin-bottom: 1em;
+    padding: 3px;
+}
+
+.text-containers p{
+    margin-bottom: 0;
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.thought-info .text-containers p{
+    font-size: 1em;
+}
+
+.daydream-container img{
+    max-width: 1em;
 }

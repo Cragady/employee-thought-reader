@@ -15,3 +15,15 @@
   font-size: calc(10px + 2vmin);
   color: white;
 }
+
+.bottom-pusher{
+  visibility: hidden;
+}
+
+.btn-brain{
+  margin: 0.5em;
+  opacity: 0.65;
+  font-size: 1.9em;
+  min-width: 26vw;
+  min-height: 5vw;
+}

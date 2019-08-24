@@ -102,11 +102,10 @@ class App extends Component{
     setTimeout(() =>{
       if(this.state.thought.isDisabled){
         this.setState({
-          lagger: <button className="btn btn-brain" onClick={this.brainRefresh} >Stop Reading</button>
+          lagger: <button className="btn btn-brain" onClick={this.brainRefresh} >Stop Thinking</button>
         });
       } else return;
-    // }, 22000);
-    }, 220);
+    }, 22000);
   };
 
   mindMapper = (tho) =>{

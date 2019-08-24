@@ -22,21 +22,30 @@ export const Thoughts = props => {
 
                 {props.name && 
                     <section className="thought-info">
-                        <div className="text-containers">
-                            {props.currentBeer && <p>Current Beer: {props.currentBeer}</p>}
+                    {props.currentBeer &&
+                        <div className="beer-wrapper">
+                            <div className="text-containers">
+                                <p><span className="p-header">Current Beer:</span> <br /> {props.currentBeer}</p>
+                            </div>
+                            <br />
                         </div>
+                    }
     
-                        <br />
     
-                        <div className="text-containers">
-                            {props.currentThought && <p>Current Thought: {props.currentThought}</p>}
-                        </div> 
+                    {props.currentThought && 
+                        <div className="current-thought-wrapper">
+                            <div className="text-containers">
+                                <p><span className="p-header">Current Thought:</span> <br /> {props.currentThought}</p>
+                            </div>                         
+                            <br />
+                        </div>
+                    }
                         
-                        <br />
-                        
+                    {props.daydream && 
                         <div className="daydream-container">
-                            {props.daydream && <img src={props.daydream} alt={props.name + " daydrem"} />}
+                            <img src={props.daydream} alt={props.name + " daydrem"} />
                         </div>
+                    }
                     </section>
                 }
 

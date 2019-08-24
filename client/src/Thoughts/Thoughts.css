@@ -36,6 +36,20 @@ img{
     border-radius: 15px;
 }
 
+.text-containers p{
+    margin-bottom: 0;
+    font-size: 1.5em;
+}
+
+.img-name-container p{
+    font-size: 1.7em;
+    color: rgb(243, 232, 232);
+}
+
+.thought-info .text-containers p{
+    font-size: 1em;
+}
+
 .p-header{
     font-size: 1.3em;
     font-weight: bold;
@@ -44,15 +58,16 @@ img{
     color: rgb(243, 232, 232);
 }
 
-.text-containers p{
-    margin-bottom: 0;
-    font-size: 1.5em;
+.daydream-header{
+    text-decoration: none;
 }
 
-.thought-info .text-containers p{
-    font-size: 1em;
+.daydream-container{
+    display: block;
 }
 
 .daydream-container img{
     max-width: 1em;
+    margin-top: 0.8em;
+    margin-bottom: 0.8em;
 }

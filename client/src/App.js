@@ -102,7 +102,7 @@ class App extends Component{
     setTimeout(() =>{
       if(this.state.thought.isDisabled){
         this.setState({
-          lagger: <button className="btn btn-secondary btn-brain" onClick={this.brainRefresh} >Click me if too long</button>
+          lagger: <button className="btn btn-brain" onClick={this.brainRefresh} >Stop Reading</button>
         });
       } else return;
     // }, 22000);
@@ -179,11 +179,11 @@ class App extends Component{
         {lagPlacer}{lagPlacer && <br />}
 
         {nonClickable === true ? 
-          <button className="btn btn-secondary btn-brain" disabled>
+          <button className="btn btn-brain" disabled>
             {butText}
           </button>
         : 
-          <button className="btn btn-secondary btn-brain" onClick={this.brainLimiter}>
+          <button className="btn btn-brain" onClick={this.brainLimiter}>
             {butText}
           </button>
         }

@@ -42,8 +42,11 @@ export const Thoughts = props => {
                     }
                         
                     {props.daydream && 
-                        <div className="daydream-container">
-                            <img src={props.daydream} alt={props.name + " daydrem"} />
+                        <div className="text-containers daydream-container">
+                            <p><span className="p-header daydream-header ">My Daydream</span></p>
+                            <div className="daydream-img-container">
+                                <img src={props.daydream} alt={props.name + " daydrem"} />
+                            </div>
                         </div>
                     }
                     </section>

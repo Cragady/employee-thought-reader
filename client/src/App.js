@@ -117,8 +117,7 @@ class App extends Component{
           lagger: <button className="btn btn-brain" onClick={this.brainRefresh} >Stop Thinking</button>
         });
       };
-      // }, 22000);
-    }, 2200);
+    }, 22000);
   };
 
   mindMapper = (tho) =>{
@@ -150,8 +149,6 @@ class App extends Component{
   };
 
   render(){
-    console.log(env);
-    console.log(typeof env);
     const socket = this.state.endpoint;
     let thoughtItems, thoughtPlacement,
       nonClickable = this.state.thought.isDisabled,

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import API from './utils/API';
+import { env } from './utils/env';
 import io from 'socket.io-client';
 import Thoughts from './Thoughts/Thoughts';
 import './App.css';
@@ -7,15 +8,23 @@ import './App.css';
 class App extends Component{
   constructor(props){
     super(props);
+    this.portpoint = function(){
+      if(env === "prod"){
+        return window.location.port;
+      } else {
+        return parseInt(window.location.port) + 1;
+      }
+    };
     this.state = {
-      endpoint: io(`${window.location.hostname}:${parseInt(window.location.port) + 1}`),
+      endpoint: io(`${window.location.hostname}:${this.portpoint()}`),
+      testpoint: `${window.location.hostname}:${this.portpoint()}`,
       thought: {
         imgUrl: './images/unknown.png',
         tStamp: 0
       },
       innerDis: 'Read Brain',
       lagger: null
-    }
+    };
   }
 
   send = () =>{
@@ -24,7 +33,10 @@ class App extends Component{
   };
 
   setThought = (brain) =>{
-    this.setState({thought: brain});
+    this.setState({
+      thought: brain,
+      lagger: null
+    });
   };
 
   componentDidMount(){
@@ -94,18 +106,19 @@ class App extends Component{
     // eslint-disable-next-line
     await this.brainSwitch(true, <marquee>Thinking. . .</marquee>);
     socket.emit('api called');
-    this.brainLag();
     this.brainCommunication();
   };
 
   brainLag = () =>{
-    setTimeout(() =>{
+    const id = setTimeout(() =>{
+      clearTimeout(id);
       if(this.state.thought.isDisabled){
         this.setState({
           lagger: <button className="btn btn-brain" onClick={this.brainRefresh} >Stop Thinking</button>
         });
-      } else return;
-    }, 22000);
+      };
+      // }, 22000);
+    }, 2200);
   };
 
   mindMapper = (tho) =>{
@@ -118,7 +131,8 @@ class App extends Component{
         ...preState.thought,
         isDisabled: bool
       },
-      innerDis: htmlPass
+      innerDis: htmlPass,
+      lagger: null
     }));
   };
 
@@ -128,13 +142,16 @@ class App extends Component{
         ...preState.thought,
         isDisabled: false
       },
-      innerDis: 'Read Brain'
+      innerDis: 'Read Brain',
+      lagger: null
     }));
     const socket = this.state.endpoint;
     socket.emit('override thought');
   };
 
   render(){
+    console.log(env);
+    console.log(typeof env);
     const socket = this.state.endpoint;
     let thoughtItems, thoughtPlacement,
       nonClickable = this.state.thought.isDisabled,

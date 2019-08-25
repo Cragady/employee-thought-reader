@@ -24,3 +24,5 @@ yarn-error.log*
 
 notes.md
 playground.js
+
+/client/src/utils/env.js

@@ -23,6 +23,7 @@ After cloning or forking, run `yarn install` in the root of this application usi
 
 * I would like to have a way to test this on a larger scale to see if the bottlenecking I implemented works as desired. It seems like a remote server is more suited for operations than a local server.
 * With the way I'm handling the api calls, I'm forcing a timeout after about 20 seconds on the backend and and returning a failed api call if there is already a call active. If the intention was to avoid conflicting responses for the clients, I believe I have this condition met. If not, however, I would need to research a little into actually stopping an api call after one has been sent out. If the botteneck works better on a remote server, this is a needless worry.
+* If the above point is valid, a database is involved, and this process could apply to a different application, I could probably give the client (original api caller) the information and ask them to confirm the change. After the change is confirmed by the client, the hypothetical database will be updated via a different api process.
 * The `marquee` I am using to notify users of an api process is flagged as a distracting element in `eslint`. This would need to be resolved instead of putting `// eslint-disable-next-line` before the line the `marquee` is on.
 * Better layout and use of arias and labels for accessibility.
 

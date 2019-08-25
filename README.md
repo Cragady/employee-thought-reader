@@ -3,10 +3,15 @@
 # Purpose
 
 The reason behind creating this application was to build a simple User Interface and Backend around an api provided by an outside source. The requirements were to:
+
   * take the json object and present that to the user in an easy to digest way.
+
   * Give the user a way to hit the api.
+
   * Limit the amount of calls that are able to go through (Only one call at a time is the idea).
+
   * Let the user know when an api call has been made, and that it is still processing
+  
   * Update all connected clients to the latest response from the api simultaneously
 
 To fulfill some of these requirements, I used `socket.io` to communicate between clients and the server on all important changes.
@@ -22,8 +27,13 @@ After cloning or forking, run `yarn install` in the root of this application usi
 # Improvements/Desires
 
 * I would like to have a way to test this on a larger scale to see if the bottlenecking I implemented works as desired. It seems like a remote server is more suited for operations than a local server.
+
 * With the way I'm handling the api calls, I'm forcing a timeout after about 20 seconds on the backend and and returning a failed api call if there is already a call active. If the intention was to avoid conflicting responses for the clients, I believe I have this condition met. If not, however, I would need to research a little into actually stopping an api call after one has been sent out. If the botteneck works better on a remote server, this is a needless worry.
-* If the above point is valid, a database is involved, and this process could apply to a different application, I could probably give the client (original api caller) the information and ask them to confirm the change. After the change is confirmed by the client, the hypothetical database will be updated via a different api process.
+
+* If the above point is valid, a database is involved, and this process could apply to a different application, I could probably give the client (original api caller) the information and ask them to confirm the change. After the change is confirmed by the client, the hypothetical database will be updated via a different api process with its own bottleneck and a new timestamp on the confirmation process. 
+  
+  The timestamps being put on the thought could be used to compare with the latest database update, and be rejected if it is an earlier version of the information. If this process is too lenghty, it could be automated while using `socket.io` for confirmation and comparison. This way, in the event of the bottleneck failing at both points, it avoids two simultaneous updates by comparing the thought timestamp and confirmation timestamp.
+
 * The `marquee` I am using to notify users of an api process is flagged as a distracting element in `eslint`. This would need to be resolved instead of putting `// eslint-disable-next-line` before the line the `marquee` is on.
 * Better layout and use of arias and labels for accessibility.
 

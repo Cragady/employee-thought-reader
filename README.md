@@ -59,3 +59,7 @@ After the client gets the response, the response is communicated back to the ser
 * A message that displays briefly when the api times out or fails.
 
 * Emitting `socket.io` instances purely from server so as not to rely on the client to update the other clients. This will let clients know of an api failure, or update in the event of the original client disconnecting or having other issues.
+
+* When a new client connects in the middle of an active api call, they are not notified. So far, it appears the bottlenecking is successful in stopping a new api call from the new client before it has had a chance to finish.
+
+* The setTimeout function responsible for placing the `stop thinking` button initiates before the allotted time eventually. This is probably due to the setTimeout not being cleared properly in React.
